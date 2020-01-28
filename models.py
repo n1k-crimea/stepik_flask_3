@@ -10,9 +10,9 @@ from sqlalchemy.sql import func
 from app import db
 
 Tutor_Goal = db.Table('Tutor_Goal',
-    db.Column('tutor_id', db.Integer, db.ForeignKey('Tutor.id')),
-    db.Column('goal_id', db.String, db.ForeignKey('Goal.id'))
-)
+                      db.Column('tutor_id', db.Integer, db.ForeignKey('Tutor.id')),
+                      db.Column('goal_id', db.String, db.ForeignKey('Goal.id'))
+                      )
 
 
 class Tutor(db.Model):
@@ -25,6 +25,7 @@ class Tutor(db.Model):
     price = db.Column(db.Integer, default=1000)
     goals = db.relationship('Goal', secondary=Tutor_Goal, back_populates='tutors')
     schedules = db.relationship('Schedule', back_populates='tutor')
+    messages = db.relationship('Message', back_populates='tutor')
 
 
 class Goal(db.Model):
@@ -66,3 +67,15 @@ class Booking(db.Model):
     phone = db.Column(db.String, nullable=False)
     _timenotch = db.Column(db.DateTime(timezone=True), default=func.now())
     schedule = db.relationship('Schedule', back_populates='bookings')
+
+
+class Message(db.Model):
+    __tablename__ = 'Message'
+    id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
+    tutor_id = db.Column(db.Integer, db.ForeignKey('Tutor.id'))
+    name = db.Column(db.String, nullable=False)
+    phone = db.Column(db.String, nullable=False)
+    text = db.Column(db.String, nullable=False)
+    _timenotch = db.Column(db.DateTime(timezone=True), default=func.now())
+    tutor = db.relationship('Tutor', back_populates='messages')
+

@@ -13,7 +13,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'wqeqrfdgvytrhgfbnfdgewtfgeryvsdferwow?!'
 db = SQLAlchemy(app)
 
-from models import Tutor, Tutor_Goal, Goal, Schedule, Booking, Request
+from models import Tutor, Tutor_Goal, Goal, Schedule, Booking, Request, Message
 
 
 class BookingForm(FlaskForm):
@@ -27,7 +27,9 @@ class BookingForm(FlaskForm):
 
 
 class RequestForm(FlaskForm):
-    request_goal = RadioField('request_goal', validators=[DataRequired()])
+    request_goal = RadioField('request_goal',
+                              choices=[('1', 'Для путешествий'), ('2', 'Для учебы'), ('3', 'Для работы'),
+                                       ('4', 'Для переезда')], validators=[DataRequired()])
     request_hours = RadioField('request_goal', choices=[('1-2', '1-2 часа в неделю'), ('3-5', '3-5 часов в неделю'),
                                                         ('5-7', '5-7 часов в неделю'), ('7-10', '7-10 часов в неделю')],
                                validators=[DataRequired()])
@@ -35,20 +37,27 @@ class RequestForm(FlaskForm):
     request_client_tel = StringField('request_client_tel', validators=[DataRequired()])
     submit = SubmitField('Найдите мне преподавателя')
 
-@app.route('/pick')
+class MsgForm(FlaskForm):
+    msg_client_name = StringField('msg_client_name', validators=[DataRequired()])
+    msg_client_tel = StringField('msg_client_tel', validators=[DataRequired()])
+    msg_text = StringField('msg_text', validators=[DataRequired()])
+    submit = SubmitField('Записаться на пробный урок')
+    msg_tutor_id = HiddenField('msg_tutor_id')
+
+
+@app.route('/pick', methods=['POST', 'GET'])
 def request_page():
-    list_goals = [(goal.id, goal.ru_name) for goal in db.session.query(Goal).all()]
     form_request = RequestForm()
     if form_request.validate_on_submit():
-        request_goal = form_request.request_goal.data
-        request_hours = form_request.request_hours.data
+        request_goal = int(form_request.request_goal.data)
         request_client_name = form_request.request_client_name.data
         request_client_tel = form_request.request_client_tel.data
-        request_row = Request(name=request_client_name, phone=request_client_tel, schedule_id=request_goal)
-        db.session.add(request_row)
+        request_new = Request(name=request_client_name, phone=request_client_tel, goal_id=request_goal)
+        db.session.add(request_new)
         db.session.commit()
         return redirect(url_for('search_result_page'))
-    return render_template('pick.html')
+    return render_template('pick.html', form_request=form_request)
+
 
 def get_data_tutors():
     with open('store/data.json', 'r', encoding='utf-8') as data_tutors:
@@ -79,7 +88,6 @@ def goal_page(goal):
         Goal.name == goal).order_by(Tutor.rating.desc()).all()
     tutors_goal = {}
     for tutor_row in query_tutor_goal:
-        print(tutor_row[0])
         tutors_goal[tutor_row[0].id] = {'name': tutor_row[0].name, 'about': tutor_row[0].about,
                                         'picture': tutor_row[0].picture,
                                         'rating': tutor_row[0].rating, 'price': tutor_row[0].price}
@@ -144,9 +152,6 @@ def search_result_page():
         return 'ВСЕ НОРМ', 200
 
 
-
-
-
 @app.route('/booking/<tutor_id_name>/<day_time>/<int:schedule_id>', methods=['POST', 'GET'])
 def tutor_booking_page(tutor_id_name, day_time, schedule_id):
     tutor_id, tutor_name = tutor_id_name.split('--')
@@ -159,8 +164,8 @@ def tutor_booking_page(tutor_id_name, day_time, schedule_id):
         booking_tutor_name = form_booking.booking_tutor_name.data
         booking_day = form_booking.booking_day.data
         booking_time = form_booking.booking_time.data
-        booking_row = Booking(name=booking_client_name, phone=booking_client_tel, schedule_id=schedule_id)
-        db.session.add(booking_row)
+        booking_new = Booking(name=booking_client_name, phone=booking_client_tel, schedule_id=schedule_id)
+        db.session.add(booking_new)
         db.session.commit()
         return redirect(url_for('search_result_page'))
 
@@ -168,12 +173,22 @@ def tutor_booking_page(tutor_id_name, day_time, schedule_id):
     return render_template('booking.html', booking_data=booking_data, form_booking=form_booking)
 
 
-@app.route('/message/<tutor_id>')
+@app.route('/message/<int:tutor_id>', methods=['POST', 'GET'])
 def msg(tutor_id):
-    tutor = get_data_tutors()[tutor_id]
-    tutor['id'] = tutor_id
-    return render_template('message.html', tutor=tutor)
+    form_msg = MsgForm()
+    if form_msg.validate_on_submit():
+        msg_tutor_id = form_msg.msg_tutor_id.data
+        msg_client_name = form_msg.msg_client_name.data
+        msg_client_tel = form_msg.msg_client_tel.data
+        msg_text = form_msg.msg_text.data
+        msg_new = Message(tutor_id=msg_tutor_id, name=msg_client_name, phone=msg_client_tel, text=msg_text)
+        db.session.add(msg_new)
+        db.session.commit()
+        return redirect(url_for('search_result_page'))
+
+    tutor_row = db.session.query(Tutor).filter(Tutor.id == tutor_id).first()
+    tutor = {'id': tutor_row.id, 'name': tutor_row.name, 'picture': tutor_row.picture}
+    return render_template('message.html', form_msg=form_msg, tutor=tutor)
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+

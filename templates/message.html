@@ -33,25 +33,25 @@
 
      <div class="row mt-5">
         <div class="col-6 offset-3">
-            <form action="/sent" class="card mb-3" method="POST">
-
-
-                  <div class="card-body text-center pt-5">
+            <form action="" class="card mb-3" method="POST">
+                {{ form_msg.csrf_token() }}
+                <div class="card-body text-center pt-5">
                     <img src="{{ tutor.picture }}" class="mb-3" width="95" alt="">
                     <h5 class="card-title mt-2 mb-2">{{ tutor.name }}</h5>
-                    <input type="hidden" name="tutor_id" value="{{ tutor.id }}">
-                    <input type="hidden" name="tutor_name" value="{{ tutor.name }}">
                     <p class="my-1">Отправить сообщение</p>
-                  </div>
+                </div>
                    <hr/>
                    <div class="card-body mx-3">
-                      <p class="mb-1 mt-2">Вас зовут</p>
-                      <input class="form-control" type="text" placeholder="" name="msg_client_name">
-                      <p class="mb-1 mt-2">Ваш телефон</p>
-                      <input class="form-control" type="text" placeholder="" name="msg_client_tel">
-                      <p class="mb-1 mt-2">Сообщение</p>
-                      <input class="form-control" type="text" placeholder="" name="msg_text">
-                      <input type="submit" class="btn btn-primary btn-block mt-4" value="Записаться на пробный урок">
+                       <p class="mb-1 mt-2">Вас зовут</p>
+                       {{ form_msg.msg_tutor_id(value=tutor.id) }}
+                       {{ form_msg.msg_client_name(class="form-control") }}
+
+                       <p class="mb-1 mt-2">Ваш телефон</p>
+                       {{ form_msg.msg_client_tel(class="form-control") }}
+
+                       <p class="mb-1 mt-2">Сообщение</p>
+                       {{ form_msg.msg_text(class="form-control") }}
+                       {{ form_msg.submit(class="btn btn-primary btn-block mt-4") }}
 
                    </div>
 

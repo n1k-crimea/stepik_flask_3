@@ -34,5 +34,23 @@
         "hours": "3-5",
         "client_name": "Кеша",
         "client_tel": "7894"
+    },
+    "7": {
+        "goal": "travel",
+        "hours": "1-2",
+        "client_name": "Op1",
+        "client_tel": "+1111"
+    },
+    "8": {
+        "goal": "travel",
+        "hours": "1-2",
+        "client_name": "Op1",
+        "client_tel": "7894"
+    },
+    "9": {
+        "goal": "study",
+        "hours": "3-5",
+        "client_name": "Op1",
+        "client_tel": "12333"
     }
 }
