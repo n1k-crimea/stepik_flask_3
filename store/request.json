@@ -1,0 +1,38 @@
+{
+    "1": {
+        "goal": "move",
+        "hours": "7-10",
+        "client_name": "Кеша",
+        "client_tel": "+1111"
+    },
+    "2": {
+        "goal": "goal",
+        "hours": "1-2",
+        "client_name": "Муша",
+        "client_tel": "7894"
+    },
+    "3": {
+        "goal": "Для учебы",
+        "hours": "3-5",
+        "client_name": "Кира",
+        "client_tel": "78945"
+    },
+    "4": {
+        "goal": "Для работы",
+        "hours": "5-7",
+        "client_name": "Кеша",
+        "client_tel": "78945"
+    },
+    "5": {
+        "goal": "для путешествий",
+        "hours": "5-7",
+        "client_name": "Кеша",
+        "client_tel": "7894"
+    },
+    "6": {
+        "goal": "для путешествий",
+        "hours": "3-5",
+        "client_name": "Кеша",
+        "client_tel": "7894"
+    }
+}
