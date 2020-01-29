@@ -68,9 +68,9 @@
                         <td><span class="btn">{{ timetable[42][2] }}</span></td>
                     {% for item in timetable[42:49] %}
                         {% if item[3] %}
-                            <td><a href="/booking/{{tutor.id}}--{{tutor.name}}/{{item[1]}}--{{item[2]}}/{{item[0]}}" class="btn btn-sm btn-success">{{item[3]}}</a></td>
+                            <td><a href="/booking/{{tutor.id}}--{{tutor.name}}/{{item[1]}}--{{item[2]}}/{{item[0]}}" class="btn btn-sm btn-success">{{item[2]}}</a></td>
                         {% else%}
-                            <td><a href="#" class="btn btn-sm btn-secondary">{{item[3]}}</a></td>
+                            <td><a href="#" class="btn btn-sm btn-secondary">{{item[2]}}</a></td>
                         {% endif %}
                     {% endfor %}
 
@@ -80,9 +80,9 @@
                         <td><span class="btn">{{ timetable[i][2] }}</span></td>
                         {% for j in range(7) %}
                             {% if timetable[i + j][3] %}
-                                <td><a href="/booking/{{tutor.id}}--{{tutor.name}}/{{timetable[i + j][1]}}--{{timetable[i + j][2]}}/{{timetable[i + j][0]}}" class="btn btn-sm btn-success">{{timetable[i + j][3]}}</a></td>
+                                <td><a href="/booking/{{tutor.id}}--{{tutor.name}}/{{timetable[i + j][1]}}--{{timetable[i + j][2]}}/{{timetable[i + j][0]}}" class="btn btn-sm btn-success">{{timetable[i + j][2]}}</a></td>
                             {% else %}
-                                <td><a href="#" class="btn btn-sm btn-secondary">{{timetable[i + j][3]}}</a></td>
+                                <td><a href="#" class="btn btn-sm btn-secondary">{{timetable[i + j][2]}}</a></td>
                             {% endif %}
                         {% endfor %}
                     </tr>
