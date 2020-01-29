@@ -14,9 +14,6 @@ db = SQLAlchemy(app)
 from models import Tutor, Tutor_Goal, Goal, Schedule, Booking, Request, Message
 
 
-
-
-
 @app.context_processor
 def pass_goals():
     week_days = {"mon": "понедельник", "tue": "вторник", "wed": "среда", "thu": "четверг", "fri": "пятница",
